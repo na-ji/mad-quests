@@ -1,0 +1,16 @@
+{
+  "name": "mad-quests",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "WTFPL",
+  "dependencies": {
+    "axios": "^0.18.0"
+  },
+  "devDependencies": {
+    "prettier": "^1.16.3"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "printWidth": 120
+  }
+}

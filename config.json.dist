@@ -1,0 +1,15 @@
+{
+  "madAdminUrl": "http://admin.mad",
+  "itemTypeFilter": ["Pokemon", "Rare Candy", "Silver Pinap", "Stardust"],
+  "pokemonFilter": [
+    "Aerodactyl",
+    "Chansey",
+    "Magnemite",
+    "Sunkern",
+    "Omanyte",
+    "Growlithe",
+    "Snubbull",
+    "Kabuto",
+    "Gastly"
+  ]
+}
