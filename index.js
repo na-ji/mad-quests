@@ -43,7 +43,7 @@ const config = require('./config');
   console.log(`#${filteredQuests.length} quests after filter`);
 
   filteredQuests.forEach(quest => {
-    pokeNavOutput += `\n$q "${quest.rewardName}" "${quest.name}" "${quest.quest_type}"`;
+    pokeNavOutput += `\n$q "${quest.rewardName}" "${quest.name}" "${quest.quest_task}"`;
   });
 
   console.log(pokeNavOutput);
