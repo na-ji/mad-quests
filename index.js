@@ -17,7 +17,8 @@ const config = require('./config');
       }
 
       return (
-        config.pokemonFilter.indexOf(quest.pokemon_name) > -1 || config.pokemonFilter.indexOf(quest.pokemon_id) > -1
+        config.pokemonFilter.indexOf(quest.pokemon_name) > -1 ||
+        config.pokemonFilter.indexOf(parseInt(quest.pokemon_id)) > -1
       );
     })
     .sort((firstQuest, secondQuest) => {
