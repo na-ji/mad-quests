@@ -1,13 +1,15 @@
 const axios = require('axios');
-const groupBy = require('lodash.groupby');
+const groupBy = require('lodash/groupBy');
+const padStart = require('lodash/padStart');
 
 const config = require('./config');
 
 (async () => {
   const quests = (await axios.get(`${config.madAdminUrl}/get_quests`)).data;
   let pokeNavOutput = '';
-  const dateOfTheDay = new Date().toLocaleDateString('fr-FR');
-  let summaryOutput = `Rapports des quêtes du ${dateOfTheDay}`;
+  const now = new Date();
+  const dateOfTheDay = `${padStart(now.getDate(), 2, '0')}/${padStart(now.getMonth() + 1, 2, '0')}`;
+  let summaryOutput = `*Rapport des quêtes du ${dateOfTheDay}*`;
 
   console.log(`#${quests.length} quests found`);
 

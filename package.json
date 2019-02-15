@@ -5,7 +5,7 @@
   "license": "WTFPL",
   "dependencies": {
     "axios": "^0.18.0",
-    "lodash.groupby": "^4.6.0"
+    "lodash": "^4.17.11"
   },
   "devDependencies": {
     "prettier": "^1.16.3"
