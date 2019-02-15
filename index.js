@@ -3,15 +3,22 @@ const groupBy = require('lodash/groupBy');
 const padStart = require('lodash/padStart');
 
 const config = require('./config');
+const now = new Date();
+const dateOfTheDay = `${padStart(now.getDate(), 2, '0')}/${padStart(now.getMonth() + 1, 2, '0')}`;
 
 (async () => {
   const quests = (await axios.get(`${config.madAdminUrl}/get_quests`)).data;
   let pokeNavOutput = '';
-  const now = new Date();
-  const dateOfTheDay = `${padStart(now.getDate(), 2, '0')}/${padStart(now.getMonth() + 1, 2, '0')}`;
   let summaryOutput = `*Rapport des quêtes du ${dateOfTheDay}*`;
 
   console.log(`#${quests.length} quests found`);
+
+  let shinyPokemonIds = [];
+
+  if (config.filterByShinyPokemon) {
+    const shinyPokemon = (await axios.get(`https://pogoapi.net/api/v1/shiny_pokemon.json`)).data;
+    shinyPokemonIds = Object.keys(shinyPokemon).map(id => parseInt(id));
+  }
 
   const filteredQuests = quests
     .filter(quest => config.itemTypeFilter.indexOf(quest.item_type) > -1)
@@ -22,7 +29,8 @@ const config = require('./config');
 
       return (
         config.pokemonFilter.indexOf(quest.pokemon_name) > -1 ||
-        config.pokemonFilter.indexOf(parseInt(quest.pokemon_id)) > -1
+        config.pokemonFilter.indexOf(parseInt(quest.pokemon_id)) > -1 ||
+        shinyPokemonIds.indexOf(parseInt(quest.pokemon_id)) > -1
       );
     })
     .sort((firstQuest, secondQuest) => {
