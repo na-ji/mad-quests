@@ -1,11 +1,13 @@
 const axios = require('axios');
+const groupBy = require('lodash.groupby');
 
 const config = require('./config');
 
 (async () => {
   const quests = (await axios.get(`${config.madAdminUrl}/get_quests`)).data;
   let pokeNavOutput = '';
-  let summaryOutput = '';
+  const dateOfTheDay = new Date().toLocaleDateString('fr-FR');
+  let summaryOutput = `Rapports des quêtes du ${dateOfTheDay}`;
 
   console.log(`#${quests.length} quests found`);
 
@@ -48,4 +50,19 @@ const config = require('./config');
   });
 
   console.log(pokeNavOutput);
+
+  const groupedQuests = groupBy(filteredQuests, quest => {
+    return quest.rewardName + '-' + quest.quest_task;
+  });
+
+  Object.values(groupedQuests).forEach(questsCollection => {
+    const firstQuest = questsCollection[0];
+    summaryOutput += `\n\n*Quête ${firstQuest.rewardName}* "${firstQuest.quest_task}"`;
+
+    questsCollection.forEach(quest => {
+      summaryOutput += `\n - ${quest.name}`;
+    });
+  });
+
+  console.log(summaryOutput);
 })();
