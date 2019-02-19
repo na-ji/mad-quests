@@ -24,13 +24,7 @@ const getGeofence = geofencePath => {
   return geofence;
 };
 
-(async () => {
-  const quests = (await axios.get(`${config.madAdminUrl}/get_quests`)).data;
-  let pokeNavOutput = '';
-  let summaryOutput = `*Rapport des quêtes du ${dateOfTheDay}*`;
-
-  console.log(`#${quests.length} quests found`);
-
+const filterQuests = async (questCollection, config) => {
   let shinyPokemonIds = [];
 
   if (config.filterByShinyPokemon) {
@@ -47,7 +41,7 @@ const getGeofence = geofencePath => {
     };
   }
 
-  const filteredQuests = quests
+  const filteredQuests = questCollection
     .filter(quest => config.itemTypeFilter.indexOf(quest.item_type) > -1)
     .filter(quest => {
       if (quest.item_type !== 'Pokemon') {
@@ -81,26 +75,44 @@ const getGeofence = geofencePath => {
       };
     });
 
-  console.log(`#${filteredQuests.length} quests after filter`);
+  console.log(`\n#${filteredQuests.length} quests after filter`);
 
-  filteredQuests.forEach(quest => {
-    pokeNavOutput += `\n$q "${quest.rewardName}" "${quest.name}" "${quest.quest_task}"`;
-  });
+  return filteredQuests;
+};
 
-  console.log(pokeNavOutput);
+(async () => {
+  const quests = (await axios.get(`${config.madAdminUrl}/get_quests`)).data;
 
-  const groupedQuests = groupBy(filteredQuests, quest => {
-    return quest.rewardName + '-' + quest.quest_task;
-  });
+  console.log(`#${quests.length} quests found`);
 
-  Object.values(groupedQuests).forEach(questsCollection => {
-    const firstQuest = questsCollection[0];
-    summaryOutput += `\n\n*Quête ${firstQuest.rewardName}* "${firstQuest.quest_task}"`;
+  if (config.pokenavOutput) {
+    const pokeNavQuests = await filterQuests([...quests], config.pokenavOutput);
+    let pokeNavOutput = '';
 
-    questsCollection.forEach(quest => {
-      summaryOutput += `\n - ${quest.name}`;
+    pokeNavQuests.forEach(quest => {
+      pokeNavOutput += `\n$q "${quest.rewardName}" "${quest.name}" "${quest.quest_task}"`;
     });
-  });
 
-  console.log(summaryOutput);
+    console.log(pokeNavOutput);
+  }
+
+  if (config.summaryOutput) {
+    const summaryQuests = await filterQuests([...quests], config.summaryOutput);
+    let summaryOutput = `\n*Rapport des quêtes du ${dateOfTheDay}*`;
+
+    const groupedQuests = groupBy(summaryQuests, quest => {
+      return quest.rewardName + '-' + quest.quest_task;
+    });
+
+    Object.values(groupedQuests).forEach(questsCollection => {
+      const firstQuest = questsCollection[0];
+      summaryOutput += `\n\n*Quête ${firstQuest.rewardName}* "${firstQuest.quest_task}"`;
+
+      questsCollection.forEach(quest => {
+        summaryOutput += `\n - ${quest.name}`;
+      });
+    });
+
+    console.log(summaryOutput);
+  }
 })();

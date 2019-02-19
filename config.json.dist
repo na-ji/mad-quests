@@ -1,17 +1,25 @@
 {
   "madAdminUrl": "http://admin.mad",
-  "itemTypeFilter": ["Pokemon", "Rare Candy", "Super Bonbon", "Silver Pinap", "Stardust", "Poussières Étoiles"],
-  "filterByShinyPokemon": true,
-  "geofence": null,
-  "pokemonFilter": [
-    "Aerodactyl",
-    "Chansey",
-    "Magnemite",
-    "Sunkern",
-    "Omanyte",
-    "Growlithe",
-    "Snubbull",
-    "Kabuto",
-    "Gastly"
-  ]
+  "pokenavOutput": {
+    "itemTypeFilter": ["Pokemon", "Rare Candy", "Super Bonbon", "Silver Pinap", "Stardust", "Poussières Étoiles"],
+    "filterByShinyPokemon": true,
+    "geofence": null,
+    "pokemonFilter": [
+      "Aerodactyl",
+      "Chansey",
+      "Magnemite",
+      "Sunkern",
+      "Omanyte",
+      "Growlithe",
+      "Snubbull",
+      "Kabuto",
+      "Gastly"
+    ]
+  },
+  "summaryOutput": {
+    "itemTypeFilter": ["Pokemon", "Rare Candy", "Super Bonbon", "Silver Pinap", "Stardust", "Poussières Étoiles"],
+    "filterByShinyPokemon": false,
+    "geofence": null,
+    "pokemonFilter": ["Chansey", "Spinda"]
+  }
 }
