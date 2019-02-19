@@ -5,6 +5,7 @@
   "license": "WTFPL",
   "dependencies": {
     "axios": "^0.18.0",
+    "geolib": "^2.0.24",
     "lodash": "^4.17.11"
   },
   "devDependencies": {
