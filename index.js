@@ -1,4 +1,5 @@
 const axios = require('axios');
+const fs = require('fs');
 const geolib = require('geolib');
 const groupBy = require('lodash/groupBy');
 const padStart = require('lodash/padStart');
@@ -6,6 +7,22 @@ const padStart = require('lodash/padStart');
 const config = require('./config');
 const now = new Date();
 const dateOfTheDay = `${padStart(now.getDate(), 2, '0')}/${padStart(now.getMonth() + 1, 2, '0')}`;
+
+const getGeofence = geofencePath => {
+  const geofence = [];
+  const fileContent = fs.readFileSync(geofencePath, 'utf-8');
+
+  fileContent.split(/\r?\n/).forEach(function(line) {
+    const regex = /(\d+.\d+),(\d+.\d+)/;
+    const coordinates = regex.exec(line);
+
+    if (Array.isArray(coordinates)) {
+      geofence.push({ latitude: parseFloat(coordinates[1]), longitude: parseFloat(coordinates[2]) });
+    }
+  });
+
+  return geofence;
+};
 
 (async () => {
   const quests = (await axios.get(`${config.madAdminUrl}/get_quests`)).data;
@@ -21,6 +38,15 @@ const dateOfTheDay = `${padStart(now.getDate(), 2, '0')}/${padStart(now.getMonth
     shinyPokemonIds = Object.keys(shinyPokemon).map(id => parseInt(id));
   }
 
+  let filterByGeofence = () => true;
+  if (config.geofence) {
+    const geofence = getGeofence(config.geofence);
+
+    filterByGeofence = quest => {
+      return geolib.isPointInside({ latitude: quest.latitude, longitude: quest.longitude }, geofence);
+    };
+  }
+
   const filteredQuests = quests
     .filter(quest => config.itemTypeFilter.indexOf(quest.item_type) > -1)
     .filter(quest => {
@@ -34,6 +60,7 @@ const dateOfTheDay = `${padStart(now.getDate(), 2, '0')}/${padStart(now.getMonth
         shinyPokemonIds.indexOf(parseInt(quest.pokemon_id)) > -1
       );
     })
+    .filter(filterByGeofence)
     .sort((firstQuest, secondQuest) => {
       if (firstQuest.item_type === 'Pokemon' && secondQuest.item_type === 'Pokemon') {
         return parseInt(firstQuest.pokemon_id) - parseInt(secondQuest.pokemon_id);

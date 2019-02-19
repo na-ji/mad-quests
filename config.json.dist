@@ -2,6 +2,7 @@
   "madAdminUrl": "http://admin.mad",
   "itemTypeFilter": ["Pokemon", "Rare Candy", "Super Bonbon", "Silver Pinap", "Stardust", "Poussières Étoiles"],
   "filterByShinyPokemon": true,
+  "geofence": null,
   "pokemonFilter": [
     "Aerodactyl",
     "Chansey",
