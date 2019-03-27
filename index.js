@@ -24,6 +24,16 @@ const getGeofence = geofencePath => {
   return geofence;
 };
 
+const sendWebhook = async (message) => {
+  if (!config.webhookUrl) {
+    return;
+  }
+
+  await axios.post(config.webhookUrl, {
+    content: message
+  });
+};
+
 const filterQuests = async (questCollection, config) => {
   let shinyPokemonIds = [];
 
@@ -89,9 +99,11 @@ const filterQuests = async (questCollection, config) => {
     const pokeNavQuests = await filterQuests([...quests], config.pokenavOutput);
     let pokeNavOutput = '';
 
-    pokeNavQuests.forEach(quest => {
-      pokeNavOutput += `\n$q "${quest.rewardName}" "${quest.name}" "${quest.quest_task}"`;
-    });
+    for (let quest of pokeNavQuests) {
+      const questCommand = `$q "${quest.rewardName}" "${quest.name}" "${quest.quest_task}"`;
+      pokeNavOutput += `\n${questCommand}`;
+      await sendWebhook(questCommand);
+    }
 
     console.log(pokeNavOutput);
   }
