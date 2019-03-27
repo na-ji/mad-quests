@@ -24,14 +24,30 @@ const getGeofence = geofencePath => {
   return geofence;
 };
 
-const sendWebhook = async (message) => {
+const sleep = (milliseconds) => {
+  return new Promise(resolve => setTimeout(resolve, milliseconds))
+};
+
+const sendWebhook = async message => {
   if (!config.webhookUrl) {
     return;
   }
 
-  await axios.post(config.webhookUrl, {
-    content: message
-  });
+  try {
+    await axios.post(config.webhookUrl, {
+      content: message
+    });
+    await sleep(500);
+  } catch (error) {
+    const response = error.response;
+    const responseContent = response.data;
+
+    if (response.status === 429) {
+      console.log(`waiting ${responseContent.retry_after}ms`);
+      await sleep(responseContent.retry_after);
+      await sendWebhook(message);
+    }
+  }
 };
 
 const filterQuests = async (questCollection, config) => {
