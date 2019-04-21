@@ -1,5 +1,6 @@
 const axios = require('axios');
 const fs = require('fs');
+const path = require('path');
 const geolib = require('geolib');
 const groupBy = require('lodash/groupBy');
 const padStart = require('lodash/padStart');
@@ -10,7 +11,7 @@ const dateOfTheDay = `${padStart(now.getDate(), 2, '0')}/${padStart(now.getMonth
 
 const getGeofence = geofencePath => {
   const geofence = [];
-  const fileContent = fs.readFileSync(geofencePath, 'utf-8');
+  const fileContent = fs.readFileSync(path.resolve(__dirname, geofencePath), 'utf-8');
 
   fileContent.split(/\r?\n/).forEach(function(line) {
     const regex = /(\d+.\d+),(\d+.\d+)/;
