@@ -25,8 +25,8 @@ const getGeofence = geofencePath => {
   return geofence;
 };
 
-const sleep = (milliseconds) => {
-  return new Promise(resolve => setTimeout(resolve, milliseconds))
+const sleep = milliseconds => {
+  return new Promise(resolve => setTimeout(resolve, milliseconds));
 };
 
 const sendWebhook = async message => {
@@ -55,8 +55,10 @@ const filterQuests = async (questCollection, config) => {
   let shinyPokemonIds = [];
 
   if (config.filterByShinyPokemon) {
-    const shinyPokemon = (await axios.get(`https://pogoapi.net/api/v1/shiny_pokemon.json`)).data;
-    shinyPokemonIds = Object.keys(shinyPokemon).map(id => parseInt(id));
+    const shinyPokemonCollection = (await axios.get(`https://pogoapi.net/api/v1/shiny_pokemon.json`)).data;
+    shinyPokemonIds = Object.values(shinyPokemonCollection)
+      .filter(pokemon => pokemon.found_wild)
+      .map(pokemon => pokemon.id);
   }
 
   let filterByGeofence = () => true;
