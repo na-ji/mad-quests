@@ -110,7 +110,15 @@ const filterQuests = async (questCollection, config) => {
 };
 
 (async () => {
-  const quests = (await axios.get(`${config.madAdminUrl}/get_quests`)).data;
+  const { madminUsername, madminPassword } = config;
+  const options = {};
+  if (madminUsername && madminUsername !== '' && madminPassword && madminPassword !== '') {
+    options.auth = {
+      username: madminUsername,
+      password: madminPassword
+    };
+  }
+  const quests = (await axios.get(`${config.madAdminUrl}/get_quests`, options)).data;
 
   console.log(`#${quests.length} quests found`);
 

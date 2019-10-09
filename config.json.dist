@@ -1,5 +1,7 @@
 {
   "madAdminUrl": "http://admin.mad",
+  "madminUsername": null,
+  "madminPassword": null,
   "webhookUrl": null,
   "pokenavOutput": {
     "itemTypeFilter": ["Pokemon", "Rare Candy", "Super Bonbon", "Silver Pinap", "Stardust", "Poussières Étoiles"],
