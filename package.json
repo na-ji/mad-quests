@@ -6,7 +6,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "geolib": "^2.0.24",
-    "lodash": "^4.17.19"
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "prettier": "^1.16.3"
